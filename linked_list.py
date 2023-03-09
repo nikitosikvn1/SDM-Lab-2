@@ -66,15 +66,64 @@ class DoublyLinkedList:
 
     # Removes an element by index and returns it
     def delete(self, index: int) -> Any:
-        pass
+        if index < 0 or index >= self.count:
+            raise IndexError("Index out of range")
+
+        if self.count == 1:
+            data = self.head.data
+            self.head = None
+            self.tail = None
+        elif index == 0:
+            data = self.head.data
+            self.head = self.head.next
+            self.head.prev = None
+        elif index == self.count - 1:
+            data = self.tail.data
+            self.tail = self.tail.prev
+            self.tail.next = None
+        else:
+            current = self.head
+            for i in range(index):
+                current = current.next
+
+            data = current.data
+            current.prev.next = current.next
+            current.next.prev = current.prev
+
+        self.count -= 1
+        return data
 
     # Removes all elements in list with value data
     def deleteAll(self, data: Any) -> None:
-        pass
+        current = self.head
+
+        while current:
+            if current.data == data:
+                if self.count == 1:
+                    self.head = None
+                    self.tail = None
+                elif current == self.head:
+                    self.head = self.head.next
+                    self.head.prev = None
+                elif current == self.tail:
+                    self.tail = self.tail.prev
+                    self.tail.next = None
+                else:
+                    current.prev.next = current.next
+                    current.next.prev = current.prev
+                self.count -= 1
+            current = current.next
 
     # Returns the element at the specified index
     def get (self, index: int) -> Any:
-        pass
+        if index < 0 or index >= self.count:
+            raise IndexError("Index out of range")
+
+        current = self.head
+        for i in range(index):
+            current = current.next
+
+        return current.data
 
     # Returns a copy of the current list
     def clone(self) -> List:
