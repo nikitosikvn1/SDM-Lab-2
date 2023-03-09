@@ -127,19 +127,54 @@ class DoublyLinkedList:
 
     # Returns a copy of the current list
     def clone(self) -> List:
-        pass
+        new_list = DoublyLinkedList()
+        current = self.head
+
+        while current:
+            new_list.append(current.data)
+            current = current.next
+
+        return new_list
     
     # Reverses the list
     def reverse(self) -> None:
-        pass
+        current = self.head
+
+        while current:
+            temp = current.next
+            current.next = current.prev
+            current.prev = temp
+            current = temp
+
+        temp = self.head
+        self.head = self.tail
+        self.tail = temp
 
     # Looks for the first element with value data from head and returns its index
     def findFirst(self, data: Any) -> int:
-        pass
+        current = self.head
+        index = 0
+
+        while current:
+            if current.data == data:
+                return index
+            current = current.next
+            index += 1
+
+        return -1
 
     # Looks for the first element with value data from tail and returns its index
     def findLast(self, data: Any) -> int:
-        pass
+        current = self.tail
+        index = self.count - 1
+
+        while current:
+            if current.data == data:
+                return index
+            current = current.prev
+            index -= 1
+            
+        return -1
 
     # Removes all elements of the list
     def clear(self) -> None:
