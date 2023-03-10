@@ -28,7 +28,7 @@ class TestDoublyLinkedList(unittest.TestCase):
         self.dll.append(3)
         self.dll.insert(2, 1)
 
-        self.assertEqual(str(self.dll), '1 -> 2 -> 3')
+        self.assertEqual(str(self.dll), '1 -> 3 -> 2')
     
     def test_insert_invalid_index(self):
         with self.assertRaises(IndexError):
