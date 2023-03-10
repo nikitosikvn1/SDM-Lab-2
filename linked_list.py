@@ -173,22 +173,30 @@ class DoublyLinkedList:
                 return index
             current = current.prev
             index -= 1
-            
+
         return -1
 
     # Removes all elements of the list
     def clear(self) -> None:
-        pass
+        self.head = None
+        self.tail = None
+        self.count = 0
     
     # Appends all elements of the given list to the end of the current one
     def extend(self, ex_list: List) -> None:
-        pass
+        current = ex_list.head
+
+        while current:
+            self.append(current.data)
+            current = current.next
     
     # Returns the string representation of the object
     def __str__(self) -> str:
         current = self.head
         elements = []
+
         while current:
             elements.append(str(current.data))
             current = current.next
+            
         return " -> ".join(elements)
