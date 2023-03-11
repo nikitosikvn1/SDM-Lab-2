@@ -1,8 +1,10 @@
 from typing import Any, List, Optional
 
+from decorators import validate_char_data
+
 # Doubly linked list node class
 class Node:
-    def __init__(self, data: Any) -> None:
+    def __init__(self, data: str) -> None:
         self.data = data
         self.next = None
         self.prev = None
@@ -21,7 +23,8 @@ class DoublyLinkedList:
         return self.count
 
     # Adds a new element to the end of the list
-    def append(self, data: Any) -> None:
+    @validate_char_data
+    def append(self, data: str) -> None:
         new_node = Node(data)
 
         if self.count == 0:
@@ -35,7 +38,8 @@ class DoublyLinkedList:
         self.count += 1
 
     # Inserts element at index
-    def insert(self, data: Any, index: int) -> None:
+    @validate_char_data
+    def insert(self, data: str, index: int) -> None:
         if index < 0 or index > self.count:
             raise IndexError("Index out of range")
 
@@ -65,7 +69,7 @@ class DoublyLinkedList:
         self.count += 1
 
     # Removes an element by index and returns it
-    def delete(self, index: int) -> Any:
+    def delete(self, index: int) -> str:
         if index < 0 or index >= self.count:
             raise IndexError("Index out of range")
 
@@ -94,7 +98,7 @@ class DoublyLinkedList:
         return data
 
     # Removes all elements in list with value data
-    def deleteAll(self, data: Any) -> None:
+    def deleteAll(self, data: str) -> None:
         current = self.head
 
         while current:
@@ -115,7 +119,7 @@ class DoublyLinkedList:
             current = current.next
 
     # Returns the element at the specified index
-    def get (self, index: int) -> Any:
+    def get(self, index: int) -> str:
         if index < 0 or index >= self.count:
             raise IndexError("Index out of range")
 
@@ -126,7 +130,7 @@ class DoublyLinkedList:
         return current.data
 
     # Returns a copy of the current list
-    def clone(self) -> List:
+    def clone(self) -> 'DoublyLinkedList':
         new_list = DoublyLinkedList()
         current = self.head
 
@@ -151,7 +155,7 @@ class DoublyLinkedList:
         self.tail = temp
 
     # Looks for the first element with value data from head and returns its index
-    def findFirst(self, data: Any) -> int:
+    def findFirst(self, data: str) -> int:
         current = self.head
         index = 0
 
@@ -164,7 +168,7 @@ class DoublyLinkedList:
         return -1
 
     # Looks for the first element with value data from tail and returns its index
-    def findLast(self, data: Any) -> int:
+    def findLast(self, data: str) -> int:
         current = self.tail
         index = self.count - 1
 
@@ -183,7 +187,7 @@ class DoublyLinkedList:
         self.count = 0
     
     # Appends all elements of the given list to the end of the current one
-    def extend(self, ex_list: List) -> None:
+    def extend(self, ex_list: 'DoublyLinkedList') -> None:
         current = ex_list.head
 
         while current:
