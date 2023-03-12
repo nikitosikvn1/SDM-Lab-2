@@ -1,11 +1,11 @@
 import unittest
 
-from linked_list import DoublyLinkedList
+from linked_list import TypedList
 
 
-class TestDoublyLinkedList(unittest.TestCase):
+class TestTypedList(unittest.TestCase):
     def setUp(self):
-        self.dll = DoublyLinkedList()
+        self.dll = TypedList()
     
     def test_length(self):
         self.assertEqual(self.dll.length, 0)
@@ -92,7 +92,7 @@ class TestDoublyLinkedList(unittest.TestCase):
     def test_get_invalid_index(self):
         with self.assertRaises(IndexError):
             self.dll.get(-1)
-            
+
         with self.assertRaises(IndexError):
             self.dll.get(10)
     
@@ -140,7 +140,7 @@ class TestDoublyLinkedList(unittest.TestCase):
         self.dll.append('!')
         self.dll.append('@')
 
-        other_dll = DoublyLinkedList()
+        other_dll = TypedList()
         other_dll.append('#')
         other_dll.append('$')
 

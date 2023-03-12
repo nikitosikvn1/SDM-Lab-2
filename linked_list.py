@@ -1,206 +1,80 @@
-from typing import Any, List, Optional
-
 from decorators import validate_char_data
-
-# Doubly linked list node class
-class Node:
-    def __init__(self, data: str) -> None:
-        self.data = data
-        self.next = None
-        self.prev = None
 
 
 # Doubly linked list class
-class DoublyLinkedList:
+class TypedList:
     def __init__(self) -> None:
-        self.head = None
-        self.tail = None
-        self.count = 0
+        self._list = []
 
-    # Returns the length of the linked list
+    # Returns the length of the list
     @property
     def length(self) -> int:
-        return self.count
+        return len(self._list)
 
     # Adds a new element to the end of the list
     @validate_char_data
     def append(self, data: str) -> None:
-        new_node = Node(data)
-
-        if self.count == 0:
-            self.head = new_node
-            self.tail = new_node
-        else:
-            new_node.prev = self.tail
-            self.tail.next = new_node
-            self.tail = new_node
-
-        self.count += 1
+        self._list.append(data)
 
     # Inserts element at index
     @validate_char_data
     def insert(self, data: str, index: int) -> None:
-        if index < 0 or index > self.count:
+        if index < 0 or index > self.length:
             raise IndexError("Index out of range")
-
-        new_node = Node(data)
-
-        if self.count == 0:
-            self.head = new_node
-            self.tail = new_node
-        elif index == 0:
-            new_node.next = self.head
-            self.head.prev = new_node
-            self.head = new_node
-        elif index == self.count:
-            new_node.prev = self.tail
-            self.tail.next = new_node
-            self.tail = new_node
-        else:
-            current = self.head
-            for i in range(index):
-                current = current.next
-            
-            new_node.prev = current.prev
-            new_node.next = current
-            current.prev.next = new_node
-            current.prev = new_node
-
-        self.count += 1
+        
+        self._list.insert(index, data)
 
     # Removes an element by index and returns it
     def delete(self, index: int) -> str:
-        if index < 0 or index >= self.count:
+        if index < 0 or index > self.length:
             raise IndexError("Index out of range")
-
-        if self.count == 1:
-            data = self.head.data
-            self.head = None
-            self.tail = None
-        elif index == 0:
-            data = self.head.data
-            self.head = self.head.next
-            self.head.prev = None
-        elif index == self.count - 1:
-            data = self.tail.data
-            self.tail = self.tail.prev
-            self.tail.next = None
-        else:
-            current = self.head
-            for i in range(index):
-                current = current.next
-
-            data = current.data
-            current.prev.next = current.next
-            current.next.prev = current.prev
-
-        self.count -= 1
-        return data
+        
+        return self._list.pop(index)
 
     # Removes all elements in list with value data
     def deleteAll(self, data: str) -> None:
-        current = self.head
-
-        while current:
-            if current.data == data:
-                if self.count == 1:
-                    self.head = None
-                    self.tail = None
-                elif current == self.head:
-                    self.head = self.head.next
-                    self.head.prev = None
-                elif current == self.tail:
-                    self.tail = self.tail.prev
-                    self.tail.next = None
-                else:
-                    current.prev.next = current.next
-                    current.next.prev = current.prev
-                self.count -= 1
-            current = current.next
+        self._list = [item for item in self._list if item != data]
 
     # Returns the element at the specified index
     def get(self, index: int) -> str:
-        if index < 0 or index >= self.count:
+        if index < 0 or index > self.length:
             raise IndexError("Index out of range")
-
-        current = self.head
-        for i in range(index):
-            current = current.next
-
-        return current.data
+        
+        return self._list[index]
 
     # Returns a copy of the current list
-    def clone(self) -> 'DoublyLinkedList':
-        new_list = DoublyLinkedList()
-        current = self.head
-
-        while current:
-            new_list.append(current.data)
-            current = current.next
-
+    def clone(self) -> 'TypedList':
+        new_list = TypedList()
+        new_list._list = self._list[:]
+        
         return new_list
     
     # Reverses the list
     def reverse(self) -> None:
-        current = self.head
-
-        while current:
-            temp = current.next
-            current.next = current.prev
-            current.prev = temp
-            current = temp
-
-        temp = self.head
-        self.head = self.tail
-        self.tail = temp
+        self._list = self._list[::-1]
 
     # Looks for the first element with value data from head and returns its index
     def findFirst(self, data: str) -> int:
-        current = self.head
-        index = 0
-
-        while current:
-            if current.data == data:
+        for index, item in enumerate(self._list):
+            if item == data:
                 return index
-            current = current.next
-            index += 1
-
         return -1
 
     # Looks for the first element with value data from tail and returns its index
     def findLast(self, data: str) -> int:
-        current = self.tail
-        index = self.count - 1
-
-        while current:
-            if current.data == data:
+        for index in range(len(self._list)-1, -1, -1):
+            if self._list[index] == data:
                 return index
-            current = current.prev
-            index -= 1
-
         return -1
 
     # Removes all elements of the list
     def clear(self) -> None:
-        self.head = None
-        self.tail = None
-        self.count = 0
+        self._list.clear()
     
-    # Appends all elements of the given list to the end of the current one
-    def extend(self, ex_list: 'DoublyLinkedList') -> None:
-        current = ex_list.head
-
-        while current:
-            self.append(current.data)
-            current = current.next
+    # Appends all elements of the passed list to the end of the current one
+    def extend(self, ex_list: 'TypedList') -> None:
+        self._list.extend(ex_list._list)
     
     # Returns the string representation of the object
-    def __str__(self) -> str:
-        current = self.head
-        elements = []
-
-        while current:
-            elements.append(str(current.data))
-            current = current.next
-            
-        return " -> ".join(elements)
+    def __str__(self) -> str:          
+        return " -> ".join(self._list)
